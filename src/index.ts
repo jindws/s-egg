@@ -1,9 +1,5 @@
-const Koa = require('koa')
-const app = new Koa()
-const Router = require('./route.ts')
+const SEgg = require('./segg.ts')
 
-app.use(Router().routes())
+const app = new SEgg()
 
-app.listen(3000,()=>{
-    console.log('listen 3000');
-})
+app.start()

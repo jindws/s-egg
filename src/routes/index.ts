@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = app =>({
     'get /':async ctx=>{
         ctx.body = 'index'
     },
@@ -6,4 +6,4 @@ module.exports = {
     'post /':async ctx=>{
         ctx.body = 'post index'
     }
-}
+})

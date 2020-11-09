@@ -2,8 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const Router = require('koa-router')
 
-
-module.exports = ()=>{
+function RouterInit(){
     const router = new Router()
 
     const list = fs.readdirSync(path.resolve(__dirname,'./routes'))
@@ -19,4 +18,8 @@ module.exports = ()=>{
         })
     })
     return router;
+}
+
+module.exports = {
+    RouterInit
 }
