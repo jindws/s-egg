@@ -2,49 +2,52 @@ const fs = require('fs')
 const path = require('path')
 const Router = require('koa-router')
 
-function fileList(dirPath){
+function loadData(dirPath,callback){
     const list = fs.readdirSync(path.resolve(__dirname,dirPath))
-    return list.map(itm=>{
+    list.forEach(itm=>{
         const extname = path.extname(itm)
         const filename = itm.replace(extname,'')
         const file = require(path.resolve(__dirname,dirPath) + '/' + itm)
-        const prefix = filename === 'index' ? '' : filename
-        return {
-            prefix,
-            file,
-            filename,
-        }
+        callback(filename,file)
     })
 }
-
 
 function RouterInit(app){
     const router = new Router()
 
-    const list = fileList('./routes');
-    list.forEach(itm=>{
-        Object.entries(itm.file(app)).map(([key,value])=>{
+    loadData('./routes',(filename,routes)=>{
+        const prefix = filename === 'index' ? '' : '/'+filename
+        Object.entries(routes(app)).map(([key,value])=>{
             let [method,_path] = key.split(' ')
             _path = _path.substr(0,_path.length-1)
-            router[method](`/${itm.prefix}${_path}`,value)
+            router[method](`${prefix}${_path}`,value)
         })
-    })
+    });
     return router;
 }
 
-function ControllerInit(){
+function ControllerInit(app){
     const controllers = {}
-    const list = fileList('./controller');
-    list.forEach(itm=>{
-        controllers[itm.filename] = {}
-        Object.entries(itm.file).map(([key,value])=>{
-            controllers[itm.filename][key] = value
-        })
-    })
+    loadData('./controller',(filename,controller)=>{
+        let contr = controller
+        if(typeof controller === 'function'){
+            contr = controller(app)
+        }
+        controllers[filename] = contr
+    });
     return controllers;
+}
+
+function ServiceInit(){
+    const services = {}
+    loadData('./service',(filename,controller)=>{
+        services[filename] = controller
+    });
+    return services;
 }
 
 module.exports = {
     RouterInit,
     ControllerInit,
+    ServiceInit,
 }

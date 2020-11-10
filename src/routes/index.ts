@@ -1,4 +1,4 @@
 module.exports = app =>({
     'get /':app.controller.index.index,
-    'post /':app.controller.index.page
+    'post /':ctx=>ctx.body='post index'
 })
