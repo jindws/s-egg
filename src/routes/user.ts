@@ -1,9 +1,4 @@
-module.exports = {
-    'get /':async ctx=>{
-        ctx.body = 'user'
-    },
-
-    'post /':async ctx=>{
-        ctx.body = 'post user'
-    }
-}
+module.exports = app=>({
+    'get /':app.controller.user.index,
+    'post /':app.controller.user.user
+})

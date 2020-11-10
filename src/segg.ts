@@ -1,12 +1,14 @@
 const Koa = require('koa')
-const {RouterInit} = require('./loader.ts')
+const {RouterInit,ControllerInit} = require('./loader.ts')
 
 module.exports = class SEgg{
     app
     router
+    controller
     constructor(props) {
         this.app = new Koa(props)
-        this.router = RouterInit(this.app)
+        this.controller = ControllerInit()
+        this.router = RouterInit(this)
         this.app.use(this.router.routes())
     }
 

@@ -1,9 +1,4 @@
 module.exports = app =>({
-    'get /':async ctx=>{
-        ctx.body = 'index'
-    },
-
-    'post /':async ctx=>{
-        ctx.body = 'post index'
-    }
+    'get /':app.controller.index.index,
+    'post /':app.controller.index.page
 })
